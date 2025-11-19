@@ -1,4 +1,3 @@
-import Foundation
 
 /// RFC 7230: Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
 ///

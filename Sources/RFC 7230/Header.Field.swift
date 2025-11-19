@@ -1,4 +1,3 @@
-import Foundation
 
 extension RFC_7230.Header {
     /// An HTTP header field (name-value pair) per RFC 7230 Section 3.2.
@@ -25,7 +24,7 @@ extension RFC_7230.Header {
     /// ## Reference
     ///
     /// - [RFC 7230 Section 3.2: Header Fields](https://tools.ietf.org/html/rfc7230#section-3.2)
-    public struct Field: Hashable, Sendable {
+    public struct Field: Hashable, Sendable, Codable {
         /// The header field name
         public let name: Name
 
@@ -69,7 +68,7 @@ extension RFC_7230.Header.Field {
     ///                / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
     ///                / DIGIT / ALPHA
     /// ```
-    public struct Name: Hashable, Sendable {
+    public struct Name: Hashable, Sendable, Codable {
         /// The header field name
         public let rawValue: String
 
@@ -138,7 +137,7 @@ extension RFC_7230.Header.Field {
     /// ## Reference
     ///
     /// - [RFC 7230 Section 3.2: Header Fields](https://tools.ietf.org/html/rfc7230#section-3.2)
-    public struct Value: Hashable, Sendable {
+    public struct Value: Hashable, Sendable, Codable {
         /// The validated header field value
         public let rawValue: String
 
@@ -233,5 +232,20 @@ extension RFC_7230.Header.Field: CustomStringConvertible {
     /// Returns the header field in RFC 7230 format (name: value)
     public var description: String {
         "\(name.rawValue): \(value.rawValue)"
+    }
+}
+
+// MARK: - Value Codable (custom implementation for throwing init)
+
+extension RFC_7230.Header.Field.Value {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(String.self)
+        try self.init(rawValue)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
     }
 }

@@ -1,5 +1,4 @@
 import Testing
-import Foundation
 @testable import RFC_7230
 
 @Suite("RFC_7230.Header.Field.Value Tests")
